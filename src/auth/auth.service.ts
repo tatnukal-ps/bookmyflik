@@ -1,3 +1,4 @@
+// auth.service.ts
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
@@ -16,9 +17,14 @@ export class AuthService {
     );
   }
 
-  async generateOtp(phoneNumber: string): Promise<void> {
+  async generateOtp(
+    phoneNumber: string,
+    expirationMinutes?: number,
+  ): Promise<void> {
     const otp = crypto.randomInt(100000, 999999).toString();
-    const otpExpires = new Date(Date.now() + 10 * 60 * 1000); // OTP valid for 10 minutes
+    const otpExpires = new Date(
+      Date.now() + (expirationMinutes || 10) * 60 * 1000,
+    ); // Default to 10 minutes if not provided
 
     await this.userModel.updateOne(
       { phoneNumber },

@@ -6,8 +6,11 @@ export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
   @Post('send-otp')
-  async sendOtp(@Body('phoneNumber') phoneNumber: string): Promise<string> {
-    await this.authService.generateOtp(phoneNumber);
+  async sendOtp(
+    @Body('phoneNumber') phoneNumber: string,
+    @Body('expirationMinutes') expirationMinutes?: number,
+  ): Promise<string> {
+    await this.authService.generateOtp(phoneNumber, expirationMinutes);
     return 'OTP sent successfully';
   }
 

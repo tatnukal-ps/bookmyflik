@@ -1,4 +1,10 @@
-import { Controller, Post, Body, BadRequestException } from '@nestjs/common';
+import {
+  Controller,
+  Post,
+  Body,
+  UnauthorizedException,
+  BadRequestException,
+} from '@nestjs/common';
 import { AuthService } from './auth.service';
 
 @Controller('auth')
@@ -14,7 +20,7 @@ export class AuthController {
       if (error instanceof BadRequestException) {
         return { error: error.message };
       }
-      throw error; // Re-throw unexpected errors
+      throw error;
     }
   }
 
@@ -22,12 +28,23 @@ export class AuthController {
   async verifyOtp(
     @Body('phoneNumber') phoneNumber: string,
     @Body('otp') otp: string,
-  ): Promise<string> {
-    const isValid = await this.authService.verifyOtp(phoneNumber, otp);
-    if (isValid) {
-      return 'OTP verified successfully';
-    } else {
-      return 'Invalid OTP';
+  ) {
+    try {
+      const tokens = await this.authService.verifyOtp(phoneNumber, otp);
+      return tokens;
+    } catch (error) {
+      throw new UnauthorizedException('OTP verification failed.');
+    }
+  }
+
+  @Post('refresh-token')
+  async refreshToken(@Body('refreshToken') refreshToken: string) {
+    try {
+      const accessToken =
+        await this.authService.refreshAccessToken(refreshToken);
+      return { accessToken };
+    } catch (error) {
+      throw new UnauthorizedException('Invalid refresh token.');
     }
   }
 }

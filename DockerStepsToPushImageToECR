@@ -1,0 +1,7 @@
+aws ecr get-login-password --region <your-region> | docker login --username AWS --password-stdin <aws-account-id>.dkr.ecr.<your-region>.amazonaws.com
+
+aws ecr create-repository --repository-name otp-auth-service --region <your-region>
+
+docker tag otp-auth-service:latest <aws-account-id>.dkr.ecr.<your-region>.amazonaws.com/otp-auth-service:latest
+
+docker push <aws-account-id>.dkr.ecr.<your-region>.amazonaws.com/otp-auth-service:latest

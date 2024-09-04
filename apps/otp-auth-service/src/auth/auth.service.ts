@@ -148,4 +148,22 @@ export class AuthService {
       throw new UnauthorizedException('Invalid refresh token.');
     }
   }
+
+  async verifyAccessToken(token: string): Promise<User> {
+    try {
+      const decoded = this.jwtService.verify(token);
+      const user = await this.userModel.findOne({
+        phoneNumber: decoded.phoneNumber,
+      });
+
+      if (!user) {
+        throw new UnauthorizedException('User not found');
+      }
+
+      return user;
+    } catch (error) {
+      this.logger.error('Access token verification failed', error.stack);
+      throw new UnauthorizedException('Invalid access token');
+    }
+  }
 }

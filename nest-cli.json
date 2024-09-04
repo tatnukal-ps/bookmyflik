@@ -1,8 +1,41 @@
 {
   "$schema": "https://json.schemastore.org/nest-cli",
   "collection": "@nestjs/schematics",
-  "sourceRoot": "src",
+  "sourceRoot": "apps/otp-auth-service/src",
   "compilerOptions": {
-    "deleteOutDir": true
+    "deleteOutDir": true,
+    "webpack": true,
+    "tsConfigPath": "apps/otp-auth-service/tsconfig.app.json"
+  },
+  "monorepo": true,
+  "root": "apps/otp-auth-service",
+  "projects": {
+    "otp-auth-service": {
+      "type": "application",
+      "root": "apps/otp-auth-service",
+      "entryFile": "main",
+      "sourceRoot": "apps/otp-auth-service/src",
+      "compilerOptions": {
+        "tsConfigPath": "apps/otp-auth-service/tsconfig.app.json"
+      }
+    },
+    "movie-svc": {
+      "type": "application",
+      "root": "apps/movie-svc",
+      "entryFile": "main",
+      "sourceRoot": "apps/movie-svc/src",
+      "compilerOptions": {
+        "tsConfigPath": "apps/movie-svc/tsconfig.app.json"
+      }
+    },
+    "logging-service": {
+      "type": "application",
+      "root": "apps/logging-service",
+      "entryFile": "main",
+      "sourceRoot": "apps/logging-service/src",
+      "compilerOptions": {
+        "tsConfigPath": "apps/logging-service/tsconfig.app.json"
+      }
+    }
   }
 }
